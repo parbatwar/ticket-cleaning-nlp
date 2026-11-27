@@ -58,7 +58,6 @@ def clean_tickets(tickets):
 
         query = ticket.get("query")
         if not is_valid_query(query):
-            # Not added to seen_ids: a later valid row with this id is still wanted.
             continue
 
         text = strip_html(query)
@@ -89,7 +88,7 @@ def simple_stem(word):
 def preprocess_text(text, apply_stemming=True):
     """Lowercase, strip punctuation, tokenise and remove stop words."""
     text = text.lower()
-    # Replaced with a space, not removed, so "travel&meal" splits into two tokens.
+
     text = NON_ALPHANUMERIC_PATTERN.sub(" ", text)
 
     tokens = [token for token in text.split() if token not in STOP_WORDS]
