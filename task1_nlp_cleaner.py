@@ -76,12 +76,20 @@ def simple_stem(word):
     """
     Strip common suffixes so word variants count as one keyword.
 
-    The length guard prevents over-stemming short words ("days" -> "dai").
+    Length guards prevent over-stemming short words ("days" -> "dai"). The "es"
+    rule only applies after a sibilant ("boxes" -> "box"); elsewhere the plural
+    is just "s", so "employees" -> "employee" rather than "employe".
     """
-    for suffix in ("ing", "ies", "es", "ed", "s"):
-        if word.endswith(suffix) and len(word) - len(suffix) >= 3:
-            stem = word[: -len(suffix)]
-            return stem + "y" if suffix == "ies" else stem
+    if word.endswith("ies") and len(word) > 5:
+        return word[:-3] + "y"
+    if word.endswith("ing") and len(word) > 5:
+        return word[:-3]
+    if word.endswith("ed") and len(word) > 4:
+        return word[:-2]
+    if word.endswith("es") and word[:-2].endswith(("s", "x", "z", "ch", "sh")):
+        return word[:-2]
+    if word.endswith("s") and not word.endswith("ss") and len(word) > 3:
+        return word[:-1]
     return word
 
 
